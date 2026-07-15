@@ -14,6 +14,7 @@ use TitanFields\Core\Cache\CacheManager;
 use TitanFields\GraphQL\GraphQLRegistrar;
 use TitanFields\Blocks\BlockRegistrar;
 use TitanFields\API\PublicAPI;
+use TitanFields\Admin\AdminMenu;
 
 class Plugin
 {
@@ -58,6 +59,7 @@ class Plugin
         $this->container->singleton(GraphQLRegistrar::class, GraphQLRegistrar::class);
         $this->container->singleton(BlockRegistrar::class, BlockRegistrar::class);
         $this->container->singleton(PublicAPI::class, PublicAPI::class);
+        $this->container->singleton(AdminMenu::class, AdminMenu::class);
     }
 
     public function boot(): void
@@ -85,5 +87,12 @@ class Plugin
 
         // Explicitly resolve PublicAPI so the autoloader loads the file and exposes the global functions.
         $this->container->get(PublicAPI::class);
+
+        // Boot Admin Menu
+        if (is_admin()) {
+            /** @var AdminMenu $adminMenu */
+            $adminMenu = $this->container->get(AdminMenu::class);
+            $adminMenu->registerHooks();
+        }
     }
 }
