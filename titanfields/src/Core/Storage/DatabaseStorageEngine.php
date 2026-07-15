@@ -4,8 +4,14 @@ namespace TitanFields\Core\Storage;
 
 class DatabaseStorageEngine implements StorageEngineInterface
 {
-    private string $tableName = 'wp_titanfields_data';
+    private string $tableName;
     private string $cacheGroup = 'titanfields';
+
+    public function __construct()
+    {
+        global $wpdb;
+        $this->tableName = $wpdb->prefix . 'titanfields_data';
+    }
 
     /**
      * Generate a deterministic cache key.
